@@ -3,7 +3,7 @@ name: Python Type Check (pyright)
 on: [push]
 
 jobs:
-  build:
+  pyright:
     runs-on: ubuntu-latest
     strategy:
       matrix:
