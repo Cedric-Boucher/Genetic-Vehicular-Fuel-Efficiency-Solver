@@ -172,3 +172,12 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# VSCode
+.vscode/
+
+# Application Specific
+*.zip
+*.pkl
+to_safely_stop_genetic_learner.deleteme
