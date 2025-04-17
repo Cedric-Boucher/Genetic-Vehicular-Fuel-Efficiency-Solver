@@ -1,12 +1,9 @@
 from solver_input_solution import SolverInputSolution, SolverFloats
 from vehicle_trip import VehicleTrip
-from datetime import datetime, timedelta
+from datetime import datetime
 from math import log2
 
 AllSolverFloats = tuple[SolverFloats, ...]
-
-t0: datetime = datetime(2024, 7, 26)
-seconds_in_a_day: int = 86400
 
 class SolverSolution:
     """
@@ -28,11 +25,11 @@ class SolverSolution:
         based on the inputs in the provided vehicle trip and the solver solution parameters
         """
         y: float = (
-            self.__solver_input_solutions[0].f((vehicle_trip.date_and_time - t0).total_seconds() / seconds_in_a_day) +
-            self.__solver_input_solutions[1].f(vehicle_trip.odometer_m) +
-            self.__solver_input_solutions[2].f(vehicle_trip.trip_distance_m) +
-            self.__solver_input_solutions[3].f(vehicle_trip.vehicle_temperature_kelvin) +
-            self.__solver_input_solutions[4].f(vehicle_trip.trip_engine_running_time_s)
+            self.__solver_input_solutions[0].f(vehicle_trip.normalized_time_since_t0) +
+            self.__solver_input_solutions[1].f(vehicle_trip.normalized_odometer) +
+            self.__solver_input_solutions[2].f(vehicle_trip.normalized_trip_distance) +
+            self.__solver_input_solutions[3].f(vehicle_trip.normalized_vehicle_temperature) +
+            self.__solver_input_solutions[4].f(vehicle_trip.normalized_trip_engine_running_time)
         )
 
         assert isinstance(y, float)
