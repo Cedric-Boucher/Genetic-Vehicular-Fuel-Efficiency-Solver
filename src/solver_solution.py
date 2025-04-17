@@ -1,6 +1,7 @@
 from solver_input_solution import SolverInputSolution, SolverFloats
 from vehicle_trip import VehicleTrip
 from datetime import datetime, timedelta
+from math import log2
 
 AllSolverFloats = tuple[SolverFloats, ...]
 
@@ -44,7 +45,11 @@ class SolverSolution:
         """
         estimated_fuel_efficiency_m_per_l: float = self.f(vehicle_trip)
         diff: float = abs(vehicle_trip.fuel_efficiency_m_per_l - estimated_fuel_efficiency_m_per_l)
-        return 1 / diff # to make higher number a better fit rather than vice versa
+        try:
+            fitness: float = log2(1 / diff) # to make higher number a better fit rather than vice versa
+        except ValueError:
+            fitness: float = -1000
+        return fitness
 
 if __name__ == "__main__":
     from random import random
