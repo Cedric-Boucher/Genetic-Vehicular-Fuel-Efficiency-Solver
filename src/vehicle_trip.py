@@ -29,13 +29,13 @@ class VehicleTrip:
         self.__date_and_time = date_and_time
 
     @property
-    def seconds_since_t0(self, t0: datetime = t0) -> float:
+    def seconds_since_t0(self) -> float:
         assert isinstance(t0, datetime)
         assert self.__date_and_time is not None
         return (self.__date_and_time - t0).total_seconds()
 
     @property
-    def normalized_time_since_t0(self, t0: datetime = t0) -> float:
+    def normalized_time_since_t0(self) -> float:
         return self.seconds_since_t0 / date_and_time_s_normalization_factor
 
     @property
