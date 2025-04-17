@@ -6,6 +6,10 @@ from chromosome import Chromosome
 
 import config
 
+from vehicle_trip import VehicleTrip
+from datetime import datetime
+from solver_solution import SolverSolution
+
 def fitness(ga_instance: pygad.GA, chromosome: Chromosome, solution_idx: int) -> float:
     """test the given chromosome and return a fitness score to be maximized
 
@@ -17,7 +21,24 @@ def fitness(ga_instance: pygad.GA, chromosome: Chromosome, solution_idx: int) ->
     Returns:
         float: fitness score to be maximized
     """
-    return 0.0
+    vehicle_trip = VehicleTrip()
+    vehicle_trip.date_and_time = datetime(2025, 1, 1)
+    vehicle_trip.odometer_km = 123456
+    vehicle_trip.trip_distance_km = 8.5
+    vehicle_trip.vehicle_temperature_celsius = 10
+    vehicle_trip.trip_engine_running_time_m = 11.32
+    vehicle_trip.fuel_efficiency_l_per_hundred_km = 7.1
+
+    solver_solution = SolverSolution((
+        tuple(chromosome[0:39]),
+        tuple(chromosome[39:39*2]),
+        tuple(chromosome[39*2:39*3]),
+        tuple(chromosome[39*3:39*4]),
+        tuple(chromosome[39*4:39*5])
+    ))
+
+    fitness: float = solver_solution.fitness(vehicle_trip)
+    return fitness
 
 def on_generation(ga_instance: pygad.GA):
     ga_instance.save(config.GA_MODEL_FILE)
@@ -72,7 +93,7 @@ def run_genetic_algorithm():
             mutation_num_genes=config.GA_NUMBER_OF_GENES_TO_MUTATE,
             gene_type=float,
             gene_space={"low": 0, "high": 1},
-            parallel_processing=["process", config.GA_NUMBER_OF_THREADS]
+            parallel_processing=["process", config.GA_NUMBER_OF_THREADS] if config.GA_NUMBER_OF_THREADS > 1 else None
         )
 
     ga_instance.run()
