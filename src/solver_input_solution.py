@@ -6,7 +6,7 @@ SolverFloats = tuple[float, float, float, float, float, float, float, float, flo
                      float, float, float, float, float, float, float, float, float, float,
                      float, float, float, float, float, float, float, float, float]
 
-def bounded_to_gauss(x: float, mean: float = 0.0, standard_deviation: float = 0.1) -> float:
+def bounded_to_gauss(x: float, mean: float = 0.0, standard_deviation: float = 1.0) -> float:
     # Clamp x into the open interval (0, 1)
     eps = 1e-10
     u = min(max(x, eps), 1 - eps)
