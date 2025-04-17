@@ -14,7 +14,8 @@ def bounded_to_gauss(x: float, mean: float = 0.0, standard_deviation: float = 10
     assert (u > 0 and u < 1), "provided x value was outside of allowable range [0, 1] for conversion via gaussian function"
 
     # Convert to Gaussian
-    return norm.ppf(u) * standard_deviation + mean # type: ignore
+    percent_point = float(norm.ppf(u))
+    return percent_point * standard_deviation + mean
 
 class SolverSolution:
     """
@@ -65,5 +66,5 @@ class SolverSolution:
 
 if __name__ == "__main__":
     from random import random, gauss
-    test = SolverSolution(tuple(random() for _ in range(39)))
+    test = SolverSolution(tuple(random() for _ in range(39))) # type: ignore
     print(test.f(1))
