@@ -37,6 +37,15 @@ class SolverSolution:
         assert isinstance(y, float)
         return y
 
+    def fitness(self, vehicle_trip: VehicleTrip) -> float:
+        """
+        returns a fitness score for how well this SolverSolution fits the actual fuel efficiency of this trip,
+        higher number means better fit
+        """
+        estimated_fuel_efficiency_m_per_l: float = self.f(vehicle_trip)
+        diff: float = abs(vehicle_trip.fuel_efficiency_m_per_l - estimated_fuel_efficiency_m_per_l)
+        return 1 / diff # to make higher number a better fit rather than vice versa
+
 if __name__ == "__main__":
     from random import random
     test = SolverSolution((
@@ -53,6 +62,6 @@ if __name__ == "__main__":
     vehicle_trip.vehicle_temperature_celsius = 10
     vehicle_trip.trip_engine_running_time_m = 11.32
     vehicle_trip.fuel_efficiency_l_per_hundred_km = 7.1
-    print(test.f(vehicle_trip))
+    print(test.fitness(vehicle_trip))
 
 # issue: need to normalize "x" for each input to "f(x)"

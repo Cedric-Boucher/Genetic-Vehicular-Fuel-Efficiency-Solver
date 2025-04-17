@@ -72,7 +72,7 @@ def run_genetic_algorithm():
             mutation_num_genes=config.GA_NUMBER_OF_GENES_TO_MUTATE,
             gene_type=float,
             gene_space={"low": 0, "high": 1},
-            parallel_processing=["process", config.GA_NUMBER_OF_THREADS]
+            parallel_processing=["process", config.GA_NUMBER_OF_THREADS] if config.GA_NUMBER_OF_THREADS > 1 else None
         )
 
     ga_instance.run()
