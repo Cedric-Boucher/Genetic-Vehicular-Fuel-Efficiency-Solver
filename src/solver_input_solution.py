@@ -17,14 +17,11 @@ def bounded_to_gauss(x: float, mean: float = 0.0, standard_deviation: float = 10
     percent_point = float(norm.ppf(u))
     return percent_point * standard_deviation + mean
 
-class SolverSolution:
+class SolverInputSolution:
     """
-    Represents a potential solution that the solver has generated.
+    Represents a potential solution that the solver has generated for a single input variable.
 
-    The input variables are the variables in VehicleTrip,
-    except for fuel efficiency, which is the output.
-
-    The solution has the following for each input variable:
+    The solution has the following:
     - a fifth order polynomial `a*x^5 + b*x^4 + c*x^3 + d*x^2 + e*x + f`
     - a reciprocal `a/(x+b)`
     - a rational function `(a*x^3 + b*x^2 + c*x + d) / (e*x^3 + f*x^2 + g*x + h)`
@@ -32,7 +29,7 @@ class SolverSolution:
     - five trigonometric functions `a*sin(b*x + c) + d*sin(e*x + f) + ...`
     - an exponent `a*b^x + c*x*d^x`
 
-    This brings the total solution variable count to 39 per input variable.
+    This brings the total solution variable count to 39.
     """
     def __init__(self, solution_parameters: SolverFloats):
         """
@@ -66,5 +63,5 @@ class SolverSolution:
 
 if __name__ == "__main__":
     from random import random, gauss
-    test = SolverSolution(tuple(random() for _ in range(39))) # type: ignore
+    test = SolverSolutionInput(tuple(random() for _ in range(39))) # type: ignore
     print(test.f(1))
