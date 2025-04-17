@@ -6,7 +6,7 @@ SolverFloats = tuple[float, float, float, float, float, float, float, float, flo
                      float, float, float, float, float, float, float, float, float, float,
                      float, float, float, float, float, float, float, float, float]
 
-def bounded_to_gauss(x: float, mean: float = 0.0, standard_deviation: float = 10.0) -> float:
+def bounded_to_gauss(x: float, mean: float = 0.0, standard_deviation: float = 0.1) -> float:
     # Clamp x into the open interval (0, 1)
     eps = 1e-10
     u = min(max(x, eps), 1 - eps)
@@ -15,7 +15,9 @@ def bounded_to_gauss(x: float, mean: float = 0.0, standard_deviation: float = 10
 
     # Convert to Gaussian
     percent_point = float(norm.ppf(u))
-    return percent_point * standard_deviation + mean
+    gaussian: float = percent_point * standard_deviation + mean
+    assert isinstance(gaussian, float)
+    return gaussian
 
 class SolverInputSolution:
     """
@@ -51,17 +53,22 @@ class SolverInputSolution:
             y += p[6]/(x+p[7])
         if (p[12]*x**3 + p[13]*x**2 + p[14]*x + p[15]) != 0:
             y += (p[8]*x**3 + p[9]*x**2 + p[10]*x + p[11]) / (p[12]*x**3 + p[13]*x**2 + p[14]*x + p[15])
-        if p[17] != 1 and p[17] > 0:
-            y += p[16]*log(x, p[17])
-        if p[19] != 1 and p[19] > 0:
-            y += p[18]*x*log(x, p[19])
+        if p[17] != 1:
+            y += p[16]*log(x, abs(p[17]))
+        if p[19] != 1:
+            y += p[18]*x*log(x, abs(p[19]))
         y += p[20]*sin(p[21]*x + p[22]) + p[23]*sin(p[24]*x + p[25]) + p[26]*sin(p[27]*x + p[28])
         y += p[29]*sin(p[30]*x + p[31]) + p[32]*sin(p[33]*x + p[34])
-        y += p[35]*p[36]**x + p[37]*x*p[38]**x
+        try:
+            y += p[35]*p[36]**x + p[37]*x*p[38]**x
+            y = y.real # y may be complex after this part since p[36] or p[38] may be negative and x may not be a whole number
+        except OverflowError:
+            pass
 
+        assert isinstance(y, float)
         return y
 
 if __name__ == "__main__":
     from random import random, gauss
-    test = SolverSolutionInput(tuple(random() for _ in range(39))) # type: ignore
+    test = SolverInputSolution(tuple(random() for _ in range(39))) # type: ignore
     print(test.f(1))
