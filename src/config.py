@@ -7,5 +7,7 @@ GA_GENERATION_GOAL: int = 1000000
 GA_FITNESS_GOAL: float = 3
 GA_NUMBER_OF_PARENTS: int = 64
 GA_NUMBER_OF_GENES_TO_MUTATE: int = 1
-GA_NUMBER_OF_THREADS: int = 1 # number of threads/processes to use for GA
+GA_NUMBER_OF_THREADS: int = 5 # number of threads/processes to use for GA
 GA_CHROMOSOME_LENGTH: int = 5*39
+
+DATA_FILE_PATH: str = "K:/Downloads/Toyota Corolla Automatic 2009.csv"
