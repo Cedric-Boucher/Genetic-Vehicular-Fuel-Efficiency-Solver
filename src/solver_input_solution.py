@@ -38,6 +38,8 @@ class SolverInputSolution:
         args:
             solution_parameters: SolverFloats - each of these values MUST be in the range [0, 1] (bounds can be inclusive or exclusive)
         """
+        assert isinstance(solution_parameters, tuple)
+        assert len(solution_parameters) == 39
         self.__solution_parameters: SolverFloats = solution_parameters
 
     @property
