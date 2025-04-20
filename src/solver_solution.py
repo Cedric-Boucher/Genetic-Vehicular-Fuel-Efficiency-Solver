@@ -65,5 +65,3 @@ if __name__ == "__main__":
     vehicle_trip.trip_engine_running_time_m = 11.32
     vehicle_trip.fuel_efficiency_l_per_hundred_km = 7.1
     print(test.fitness(vehicle_trip))
-
-# issue: need to normalize "x" for each input to "f(x)"
