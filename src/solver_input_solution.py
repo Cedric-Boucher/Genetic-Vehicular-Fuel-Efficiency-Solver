@@ -72,6 +72,10 @@ class SolverInputSolution:
         assert isinstance(y, float)
         return y
 
+    def __str__(self) -> str:
+        p: SolverFloats = SolverFloats([bounded_to_gauss(v) for v in self.__solution_parameters])
+        return str(p)
+
 if __name__ == "__main__":
     from random import random, gauss
     test = SolverInputSolution(tuple(random() for _ in range(39))) # type: ignore

@@ -48,6 +48,14 @@ class SolverSolution:
             fitness: float = -1000
         return fitness
 
+    def __str__(self) -> str:
+        display: str = str()
+        for solver_input_solution in self.__solver_input_solutions:
+            display += str(solver_input_solution)
+            display += "\n"
+
+        return display
+
 if __name__ == "__main__":
     from random import random
     test = SolverSolution((
