@@ -45,6 +45,8 @@ class SolverInputSolution:
         return self.__solution_parameters
 
     def f(self, x: float) -> float:
+        if x == 0:
+            x = 0.000000001
         if x <= 0:
             raise Exception("Input value x is expected to be a positive and non-zero scalar value, but was negative or 0")
         p: SolverFloats = SolverFloats([bounded_to_gauss(v) for v in self.__solution_parameters])
