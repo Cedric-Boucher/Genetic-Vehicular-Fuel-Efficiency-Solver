@@ -52,6 +52,12 @@ class SolverSolution:
             fitness: float = -1000
         return fitness
 
+    def difference_in_l_per_hundred_km(self, vehicle_trip: VehicleTrip) -> float:
+        estimated_fuel_efficiency_m_per_l: float = self.f(vehicle_trip)
+        estimated_fuel_efficiency_l_per_hundred_km: float = 100000/estimated_fuel_efficiency_m_per_l
+        diff: float = abs(vehicle_trip.fuel_efficiency_l_per_hundred_km - estimated_fuel_efficiency_l_per_hundred_km)
+        return diff
+
     def __str__(self) -> str:
         display: str = str()
         for solver_input_solution in self.__solver_input_solutions:
