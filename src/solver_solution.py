@@ -19,6 +19,10 @@ class SolverSolution:
     def all_solution_parameters(self) -> AllSolverFloats:
         return tuple([sis.solution_parameters for sis in self.__solver_input_solutions])
 
+    @property
+    def solver_input_solutions(self) -> tuple[SolverInputSolution, ...]:
+        return self.__solver_input_solutions
+
     def f(self, vehicle_trip: VehicleTrip) -> float:
         """
         returns calculated / estimated vehicle trip efficiency
