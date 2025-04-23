@@ -12,9 +12,16 @@ from vehicle_trip import VehicleTrip
 from solver_solution import SolverSolution
 from data_importer import DataImporter
 
+from math import exp, log
+
 vehicle_trips: list[VehicleTrip] = DataImporter(config.DATA_FILE_PATH).vehicle_trips
 start_time_ns: int = time_ns()
 NANOSECONDS_IN_ONE_MINUTE = 60000000000
+
+def geomean(xs: list[float]) -> float:
+    for x in xs:
+        assert x > 0
+    return exp(sum([log(x) for x in xs]) / len(xs))
 
 def fitness(ga_instance: pygad.GA, chromosome: Chromosome, solution_idx: int) -> float:
     """test the given chromosome and return a fitness score to be maximized
