@@ -4,7 +4,7 @@ date_and_time_s_normalization_factor: int = 31557600 # seconds in a year
 odometer_m_normalization_factor: int = 1000000000 # 1 Gm (1'000'000 Km), a bit more than the lifetime of the car
 trip_distance_m_normalization_factor: int = 1000000 # 1000 Km, a bit more than a single gas tank could do
 vehicle_temperature_kelvin_normalization_factor: int = 273 # 0C in Kelvin
-trip_engine_running_time_s_normalization_factor: int = 100000 # 1000K seconds, a bit more than a single gas tank could do
+trip_engine_running_time_s_normalization_factor: int = 100000 # 100K seconds, a bit more than a single gas tank could do
 fuel_efficiency_m_per_l_normalization_factor: int = 100000 # 1 L/100Km (100 Km/L), approximate fuel efficiency of VW XL1
 
 t0: datetime = datetime(2024, 7, 26)
