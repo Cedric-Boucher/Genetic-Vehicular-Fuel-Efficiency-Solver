@@ -50,6 +50,24 @@ def on_generation(ga_instance: pygad.GA):
     generations_per_minute: float = ga_instance.generations_completed / ((time_ns() - start_time_ns) / NANOSECONDS_IN_ONE_MINUTE)
     print("Generation {:d} completed ({:.2f} generations / minute)".format(ga_instance.generations_completed, generations_per_minute))
     print("Fitness of best solution: {:.2f}".format(ga_instance.best_solution(ga_instance.last_generation_fitness)[1]))
+
+    best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
+    assert best_chromosome is not None
+    best_chromosome_list: list[float] = best_chromosome.tolist()[0]
+    solver_solution = SolverSolution((
+        tuple(best_chromosome_list[0:39]),
+        tuple(best_chromosome_list[39:39*2]),
+        tuple(best_chromosome_list[39*2:39*3]),
+        tuple(best_chromosome_list[39*3:39*4]),
+        tuple(best_chromosome_list[39*4:39*5])
+    )) # type: ignore
+    fitness_scores: list[float] = list()
+    for vehicle_trip in vehicle_trips:
+        fitness: float = solver_solution.difference_in_l_per_hundred_km(vehicle_trip)
+        fitness_scores.append(fitness)
+    average_fitness: float = sum(fitness_scores)/len(fitness_scores)
+    print("Average difference in L/100Km of best solution {:.2f}".format(average_fitness))
+
     if check_stop_flag():
         print("Detected change in stop flag file, ending")
         ga_instance.plot_fitness()
