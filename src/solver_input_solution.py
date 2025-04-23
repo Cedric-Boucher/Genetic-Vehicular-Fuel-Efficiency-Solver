@@ -74,9 +74,58 @@ class SolverInputSolution:
 
     def __str__(self) -> str:
         p: SolverFloats = SolverFloats([bounded_to_gauss(v) for v in self.__solution_parameters])
-        return str(p)
+        equation_string: str = str(
+            "{p0:.2f}*x^5 + {p1:.2f}*x^4 + {p2:.2f}*x^3 + {p3:.2f}*x^2 + {p4:.2f}*x + {p5:.2f} +\n"
+            "{p6:.2f}/(x + {p7:.2f}) +\n"
+            "({p8:.2f}*x^3 + {p9:.2f}*x^2 + {p10:.2f}*x + {p11:.2f}) / ({p12:.2f}*x^3 + {p13:.2f}*x^2 + {p14:.2f}*x + {p15:.2f}) +\n"
+            "{p16:.2f}*log_{p17:.2f}(x) + {p18:.2f}*x*log_{p19:.2f}(x) +\n"
+            "{p20:.2f}*sin({p21:.2f}*x + {p22:.2f}) + {p23:.2f}*sin({p24:.2f}*x + {p25:.2f}) + {p26:.2f}*sin({p27:.2f}*x + {p28:.2f}) + {p29:.2f}*sin({p30:.2f}*x + {p31:.2f}) + {p32:.2f}*sin({p33:.2f}*x + {p34:.2f}) +\n"
+            "Re({p35:.2f}*({p36:.2f})^x + {p37:.2f}*x*({p38:.2f})^x)"
+        ).format(
+            p0 = p[0],
+            p1 = p[1],
+            p2 = p[2],
+            p3 = p[3],
+            p4 = p[4],
+            p5 = p[5],
+            p6 = p[6],
+            p7 = p[7],
+            p8 = p[8],
+            p9 = p[9],
+            p10 = p[10],
+            p11 = p[11],
+            p12 = p[12],
+            p13 = p[13],
+            p14 = p[14],
+            p15 = p[15],
+            p16 = p[16],
+            p17 = p[17],
+            p18 = p[18],
+            p19 = p[19],
+            p20 = p[20],
+            p21 = p[21],
+            p22 = p[22],
+            p23 = p[23],
+            p24 = p[24],
+            p25 = p[25],
+            p26 = p[26],
+            p27 = p[27],
+            p28 = p[28],
+            p29 = p[29],
+            p30 = p[30],
+            p31 = p[31],
+            p32 = p[32],
+            p33 = p[33],
+            p34 = p[34],
+            p35 = p[35],
+            p36 = p[36],
+            p37 = p[37],
+            p38 = p[38]
+        )
+
+        return equation_string
 
 if __name__ == "__main__":
-    from random import random, gauss
+    from random import random
     test = SolverInputSolution(tuple(random() for _ in range(39))) # type: ignore
     print(test.f(1))
