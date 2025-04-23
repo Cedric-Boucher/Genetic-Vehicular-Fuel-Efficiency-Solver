@@ -59,10 +59,24 @@ class SolverSolution:
         return diff
 
     def __str__(self) -> str:
-        display: str = str()
-        for solver_input_solution in self.__solver_input_solutions:
-            display += str(solver_input_solution)
-            display += "\n"
+        display: str = str(
+            "Date and Time:\n"
+            "{}\n"
+            "Odometer:\n"
+            "{}\n"
+            "Trip Distance:\n"
+            "{}\n"
+            "Vehicle Temperature:\n"
+            "{}\n"
+            "Trip Engine Running Time:\n"
+            "{}"
+        ).format(
+            str(self.__solver_input_solutions[0]),
+            str(self.__solver_input_solutions[1]),
+            str(self.__solver_input_solutions[2]),
+            str(self.__solver_input_solutions[3]),
+            str(self.__solver_input_solutions[4])
+        )
 
         return display
 
