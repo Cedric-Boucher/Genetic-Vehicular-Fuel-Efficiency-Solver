@@ -14,3 +14,5 @@ DATA_FILE_PATH: str = "K:/Downloads/Toyota Corolla Automatic 2009.csv"
 
 SOLUTION_FIGURE_SAVE_DIRECTORY: str = "solution_figure/"
 SOLUTION_FIGURE_SAVE_NAME_PREFIX: str = "solution_"
+SOLUTION_FIGURE_SIZE_INCHES: tuple[float, float] = (16.0, 16.0)
+SOLUTION_FIGURE_RESOLUTION_DPI: float = 300

@@ -23,6 +23,7 @@ def plot_solution(ga_instance: pygad.GA):
         tuple(best_chromosome_list[40*4:40*5])
     )) # type: ignore
 
+    plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
     x = numpy.arange(0, 1, 1/1000)
     y = [solver_solution.solver_input_solutions[0].f(float(xi))/1000 for xi in x]
     plt.plot(x, y)
