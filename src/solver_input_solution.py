@@ -4,7 +4,9 @@ from scipy.stats import norm
 SolverFloats = tuple[float, float, float, float, float, float, float, float, float, float,
                      float, float, float, float, float, float, float, float, float, float,
                      float, float, float, float, float, float, float, float, float, float,
-                     float, float, float, float, float, float, float, float, float]
+                     float, float, float, float, float, float, float, float, float, float]
+
+STANDARD_DEVIATION_MULTIPLIER: float = 100.0
 
 def bounded_to_gauss(x: float, mean: float = 0.0, standard_deviation: float = 1.0) -> float:
     # Clamp x into the open interval (0, 1)
@@ -30,8 +32,9 @@ class SolverInputSolution:
     - a logarithm `a*log_b(x) + c*x*log_d(x)`
     - five trigonometric functions `a*sin(b*x + c) + d*sin(e*x + f) + ...`
     - an exponent `a*b^x + c*x*d^x`
+    - standard deviation to use for gaussian function
 
-    This brings the total solution variable count to 39.
+    This brings the total solution variable count to 40.
     """
     def __init__(self, solution_parameters: SolverFloats):
         """
@@ -39,7 +42,7 @@ class SolverInputSolution:
             solution_parameters: SolverFloats - each of these values MUST be in the range [0, 1] (bounds can be inclusive or exclusive)
         """
         assert isinstance(solution_parameters, tuple)
-        assert len(solution_parameters) == 39
+        assert len(solution_parameters) == 40
         self.__solution_parameters: SolverFloats = solution_parameters
 
     @property
@@ -51,7 +54,8 @@ class SolverInputSolution:
             x = 0.000000001
         if x <= 0:
             raise Exception("Input value x is expected to be a positive and non-zero scalar value, but was negative or 0")
-        p: SolverFloats = SolverFloats([bounded_to_gauss(v) for v in self.__solution_parameters])
+        solution_parameters, std = self.__solution_parameters[:39], self.__solution_parameters[39]*STANDARD_DEVIATION_MULTIPLIER
+        p: SolverFloats = SolverFloats([bounded_to_gauss(v, std) for v in solution_parameters])
         y: float = p[0]*x**5 + p[1]*x**4 + p[2]*x**3 +  p[3]*x**2 + p[4]*x + p[5]
         if (x+p[7]) != 0:
             y += p[6]/(x+p[7])
@@ -68,12 +72,15 @@ class SolverInputSolution:
             y = y.real # y may be complex after this part since p[36] or p[38] may be negative and x may not be a whole number
         except OverflowError:
             pass
+        except RuntimeWarning:
+            pass
 
         assert isinstance(y, float)
         return y
 
     def __str__(self) -> str:
-        p: SolverFloats = SolverFloats([bounded_to_gauss(v) for v in self.__solution_parameters])
+        solution_parameters, std = self.__solution_parameters[:39], self.__solution_parameters[39]*STANDARD_DEVIATION_MULTIPLIER
+        p: SolverFloats = SolverFloats([bounded_to_gauss(v, std) for v in solution_parameters])
         equation_string: str = str(
             "{p0:.2f}*x^5 + {p1:.2f}*x^4 + {p2:.2f}*x^3 + {p3:.2f}*x^2 + {p4:.2f}*x + {p5:.2f} +\n"
             "{p6:.2f}/(x + {p7:.2f}) +\n"

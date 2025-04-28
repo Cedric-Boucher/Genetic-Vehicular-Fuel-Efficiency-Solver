@@ -37,11 +37,11 @@ def fitness(ga_instance: pygad.GA, chromosome: Chromosome, solution_idx: int) ->
         float: fitness score to be maximized
     """
     solver_solution = SolverSolution((
-        tuple(chromosome[0:39]),
-        tuple(chromosome[39:39*2]),
-        tuple(chromosome[39*2:39*3]),
-        tuple(chromosome[39*3:39*4]),
-        tuple(chromosome[39*4:39*5])
+        tuple(chromosome[0:40]),
+        tuple(chromosome[40:40*2]),
+        tuple(chromosome[40*2:40*3]),
+        tuple(chromosome[40*3:40*4]),
+        tuple(chromosome[40*4:40*5])
     ))
 
     fitness_scores: list[float] = list()
@@ -64,11 +64,11 @@ def on_generation(ga_instance: pygad.GA):
     assert best_chromosome is not None
     best_chromosome_list: list[float] = best_chromosome.tolist()[0]
     solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:39]),
-        tuple(best_chromosome_list[39:39*2]),
-        tuple(best_chromosome_list[39*2:39*3]),
-        tuple(best_chromosome_list[39*3:39*4]),
-        tuple(best_chromosome_list[39*4:39*5])
+        tuple(best_chromosome_list[0:40]),
+        tuple(best_chromosome_list[40:40*2]),
+        tuple(best_chromosome_list[40*2:40*3]),
+        tuple(best_chromosome_list[40*3:40*4]),
+        tuple(best_chromosome_list[40*4:40*5])
     )) # type: ignore
     fitness_scores: list[float] = list()
     for vehicle_trip in vehicle_trips:

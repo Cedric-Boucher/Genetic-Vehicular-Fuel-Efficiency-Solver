@@ -16,11 +16,11 @@ def plot_solution(ga_instance: pygad.GA):
 
     best_chromosome_list: list[float] = best_chromosome.tolist()[0]
     solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:39]),
-        tuple(best_chromosome_list[39:39*2]),
-        tuple(best_chromosome_list[39*2:39*3]),
-        tuple(best_chromosome_list[39*3:39*4]),
-        tuple(best_chromosome_list[39*4:39*5])
+        tuple(best_chromosome_list[0:40]),
+        tuple(best_chromosome_list[40:40*2]),
+        tuple(best_chromosome_list[40*2:40*3]),
+        tuple(best_chromosome_list[40*3:40*4]),
+        tuple(best_chromosome_list[40*4:40*5])
     )) # type: ignore
 
     x = numpy.arange(0, 1, 1/1000)
@@ -49,11 +49,11 @@ if (os.path.exists(config.GA_MODEL_FILE+".pkl") and os.path.isfile(config.GA_MOD
 
     best_chromosome_list: list[float] = best_chromosome.tolist()[0]
     solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:39]),
-        tuple(best_chromosome_list[39:39*2]),
-        tuple(best_chromosome_list[39*2:39*3]),
-        tuple(best_chromosome_list[39*3:39*4]),
-        tuple(best_chromosome_list[39*4:39*5])
+        tuple(best_chromosome_list[0:40]),
+        tuple(best_chromosome_list[40:40*2]),
+        tuple(best_chromosome_list[40*2:40*3]),
+        tuple(best_chromosome_list[40*3:40*4]),
+        tuple(best_chromosome_list[40*4:40*5])
     )) # type: ignore
     print(solver_solution)
     plot_solution(ga_instance)

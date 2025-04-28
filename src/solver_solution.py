@@ -83,11 +83,11 @@ class SolverSolution:
 if __name__ == "__main__":
     from random import random
     test = SolverSolution((
-        tuple(random() for _ in range(39)),
-        tuple(random() for _ in range(39)),
-        tuple(random() for _ in range(39)),
-        tuple(random() for _ in range(39)),
-        tuple(random() for _ in range(39))
+        tuple(random() for _ in range(40)),
+        tuple(random() for _ in range(40)),
+        tuple(random() for _ in range(40)),
+        tuple(random() for _ in range(40)),
+        tuple(random() for _ in range(40))
     )) # type: ignore
     vehicle_trip = VehicleTrip()
     vehicle_trip.date_and_time = datetime(2025, 1, 1)
