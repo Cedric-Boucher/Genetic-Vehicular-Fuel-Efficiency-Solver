@@ -181,3 +181,4 @@ cython_debug/
 *.zip
 *.pkl
 to_safely_stop_genetic_learner.deleteme
+*.png
