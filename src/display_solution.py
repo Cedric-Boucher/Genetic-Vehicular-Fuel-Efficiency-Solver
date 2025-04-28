@@ -42,19 +42,20 @@ def plot_solution(ga_instance: pygad.GA):
     plt.ylabel("Contribution to Fuel Efficiency (Km/L)")
     plt.ylim((-50, 50))
 
-if (os.path.exists(config.GA_MODEL_FILE+".pkl") and os.path.isfile(config.GA_MODEL_FILE+".pkl")):
-    ga_instance: pygad.GA = pygad.load(config.GA_MODEL_FILE)
-    best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
-    assert best_chromosome is not None
+if __name__ == "__main__":
+    if (os.path.exists(config.GA_MODEL_FILE+".pkl") and os.path.isfile(config.GA_MODEL_FILE+".pkl")):
+        ga_instance: pygad.GA = pygad.load(config.GA_MODEL_FILE)
+        best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
+        assert best_chromosome is not None
 
-    best_chromosome_list: list[float] = best_chromosome.tolist()[0]
-    solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:40]),
-        tuple(best_chromosome_list[40:40*2]),
-        tuple(best_chromosome_list[40*2:40*3]),
-        tuple(best_chromosome_list[40*3:40*4]),
-        tuple(best_chromosome_list[40*4:40*5])
-    )) # type: ignore
-    print(solver_solution)
-    plot_solution(ga_instance)
-    plt.show()
+        best_chromosome_list: list[float] = best_chromosome.tolist()[0]
+        solver_solution = SolverSolution((
+            tuple(best_chromosome_list[0:40]),
+            tuple(best_chromosome_list[40:40*2]),
+            tuple(best_chromosome_list[40*2:40*3]),
+            tuple(best_chromosome_list[40*3:40*4]),
+            tuple(best_chromosome_list[40*4:40*5])
+        )) # type: ignore
+        print(solver_solution)
+        plot_solution(ga_instance)
+        plt.show()
