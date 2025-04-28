@@ -1,6 +1,10 @@
 from math import log, sin
 from scipy.stats import norm
 
+import warnings
+
+warnings.filterwarnings("error", category=RuntimeWarning)
+
 SolverFloats = tuple[float, float, float, float, float, float, float, float, float, float,
                      float, float, float, float, float, float, float, float, float, float,
                      float, float, float, float, float, float, float, float, float, float,
