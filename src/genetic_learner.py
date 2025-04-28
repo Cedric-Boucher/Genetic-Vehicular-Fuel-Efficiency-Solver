@@ -11,10 +11,19 @@ from time import time_ns
 from vehicle_trip import VehicleTrip
 from solver_solution import SolverSolution
 from data_importer import DataImporter
+from display_solution import plot_solution
+import matplotlib.pyplot as plt
 
 vehicle_trips: list[VehicleTrip] = DataImporter(config.DATA_FILE_PATH).vehicle_trips
 start_time_ns: int = time_ns()
 NANOSECONDS_IN_ONE_MINUTE = 60000000000
+
+def check_figure_directory():
+    if not os.path.exists(config.SOLUTION_FIGURE_SAVE_DIRECTORY):
+        os.makedirs(config.SOLUTION_FIGURE_SAVE_DIRECTORY)
+    assert os.path.exists(config.SOLUTION_FIGURE_SAVE_DIRECTORY)
+    if not os.path.isdir(config.SOLUTION_FIGURE_SAVE_DIRECTORY):
+        raise Exception("Could not create the solution figure save directory as a file with the path name exists")
 
 def fitness(ga_instance: pygad.GA, chromosome: Chromosome, solution_idx: int) -> float:
     """test the given chromosome and return a fitness score to be maximized
@@ -67,6 +76,11 @@ def on_generation(ga_instance: pygad.GA):
         fitness_scores.append(fitness)
     average_fitness: float = sum(fitness_scores)/len(fitness_scores)
     print("Average difference in L/100Km of best solution {:.2f}".format(average_fitness))
+    plot_solution(ga_instance)
+    check_figure_directory()
+    figure_save_path: str = os.path.join(config.SOLUTION_FIGURE_SAVE_DIRECTORY, config.SOLUTION_FIGURE_SAVE_NAME_PREFIX+str(ga_instance.generations_completed-1)+str(".png"))
+    assert not os.path.exists(figure_save_path)
+    plt.savefig(figure_save_path, dpi=1200)
 
     if check_stop_flag():
         print("Detected change in stop flag file, ending")
@@ -132,3 +146,5 @@ def run_genetic_algorithm():
 
 if __name__ == "__main__":
     run_genetic_algorithm()
+
+# TODO: split dataset into chunks, train 

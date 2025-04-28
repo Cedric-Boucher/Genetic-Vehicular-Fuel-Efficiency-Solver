@@ -11,3 +11,6 @@ GA_NUMBER_OF_THREADS: int = 5 # number of threads/processes to use for GA
 GA_CHROMOSOME_LENGTH: int = 5*39
 
 DATA_FILE_PATH: str = "K:/Downloads/Toyota Corolla Automatic 2009.csv"
+
+SOLUTION_FIGURE_SAVE_DIRECTORY: str = "solution_figure/"
+SOLUTION_FIGURE_SAVE_NAME_PREFIX: str = "solution_"
