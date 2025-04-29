@@ -81,6 +81,7 @@ def on_generation(ga_instance: pygad.GA):
     figure_save_path: str = os.path.join(config.SOLUTION_FIGURE_SAVE_DIRECTORY, config.SOLUTION_FIGURE_SAVE_NAME_PREFIX+str(ga_instance.generations_completed-1)+str(".png"))
     assert not os.path.exists(figure_save_path)
     plt.savefig(figure_save_path, dpi=config.SOLUTION_FIGURE_RESOLUTION_DPI)
+    plt.close("all")
 
     if check_stop_flag():
         print("Detected change in stop flag file, ending")
