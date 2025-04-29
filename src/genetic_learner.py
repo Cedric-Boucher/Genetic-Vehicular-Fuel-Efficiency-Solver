@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 
 vehicle_trips: list[VehicleTrip] = DataImporter(config.DATA_FILE_PATH).vehicle_trips
 start_time_ns: int = time_ns()
-NANOSECONDS_IN_ONE_MINUTE = 60000000000
+NANOSECONDS_IN_ONE_HOUR = 3600000000000
 
 def check_figure_directory():
     if not os.path.exists(config.SOLUTION_FIGURE_SAVE_DIRECTORY):
@@ -56,8 +56,8 @@ def fitness(ga_instance: pygad.GA, chromosome: Chromosome, solution_idx: int) ->
 
 def on_generation(ga_instance: pygad.GA):
     ga_instance.save(config.GA_MODEL_FILE)
-    generations_per_minute: float = ga_instance.generations_completed / ((time_ns() - start_time_ns) / NANOSECONDS_IN_ONE_MINUTE)
-    print("Generation {:d} completed ({:.2f} generations / minute)".format(ga_instance.generations_completed, generations_per_minute))
+    generations_per_hour: float = ga_instance.generations_completed / ((time_ns() - start_time_ns) / NANOSECONDS_IN_ONE_HOUR)
+    print("Generation {:d} completed ({:.2f} generations / hour)".format(ga_instance.generations_completed, generations_per_hour))
     print("Fitness of best solution: {:.2f}".format(ga_instance.best_solution(ga_instance.last_generation_fitness)[1]))
 
     best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
