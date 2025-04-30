@@ -1,11 +1,11 @@
 from datetime import datetime
 
-date_and_time_s_normalization_factor: int = 31557600 # seconds in a year
-odometer_m_normalization_factor: int = 1000000000 # 1 Gm (1'000'000 Km), a bit more than the lifetime of the car
-trip_distance_m_normalization_factor: int = 1000000 # 1000 Km, a bit more than a single gas tank could do
-vehicle_temperature_kelvin_normalization_factor: int = 273 # 0C in Kelvin
-trip_engine_running_time_s_normalization_factor: int = 100000 # 100K seconds, a bit more than a single gas tank could do
-fuel_efficiency_m_per_l_normalization_factor: int = 100000 # 1 L/100Km (100 Km/L), approximate fuel efficiency of VW XL1
+DATE_AND_TIME_S_NORMALIZATION_FACTOR: int = 31557600 # seconds in a year
+ODOMETER_M_NORMALIZATION_FACTOR: int = 1000000000 # 1 Gm (1'000'000 Km), a bit more than the lifetime of the car
+TRIP_DISTANCE_M_NORMALIZATION_FACTOR: int = 1000000 # 1000 Km, a bit more than a single gas tank could do
+VEHICLE_TEMPERATURE_KELVIN_NORMALIZATION_FACTOR: int = 273 # 0C in Kelvin
+TRIP_ENGINE_RUNNING_TIME_S_NORMALIZATION_FACTOR: int = 100000 # 100K seconds, a bit more than a single gas tank could do
+FUEL_EFFICIENCY_M_PEL_L_NORMALIZATION_FACTOR: int = 100000 # 1 L/100Km (100 Km/L), approximate fuel efficiency of VW XL1
 
 t0: datetime = datetime(2024, 7, 26)
 
@@ -36,7 +36,7 @@ class VehicleTrip:
 
     @property
     def normalized_time_since_t0(self) -> float:
-        return self.seconds_since_t0 / date_and_time_s_normalization_factor
+        return self.seconds_since_t0 / DATE_AND_TIME_S_NORMALIZATION_FACTOR
 
     @property
     def odometer_m(self) -> int:
@@ -60,7 +60,7 @@ class VehicleTrip:
 
     @property
     def normalized_odometer(self) -> float:
-        return self.odometer_m / odometer_m_normalization_factor
+        return self.odometer_m / ODOMETER_M_NORMALIZATION_FACTOR
 
     @property
     def trip_distance_m(self) -> int:
@@ -84,7 +84,7 @@ class VehicleTrip:
 
     @property
     def normalized_trip_distance(self) -> float:
-        return self.trip_distance_m / trip_distance_m_normalization_factor
+        return self.trip_distance_m / TRIP_DISTANCE_M_NORMALIZATION_FACTOR
 
     @property
     def vehicle_temperature_kelvin(self) -> float:
@@ -108,7 +108,7 @@ class VehicleTrip:
 
     @property
     def normalized_vehicle_temperature(self) -> float:
-        return self.vehicle_temperature_kelvin / vehicle_temperature_kelvin_normalization_factor
+        return self.vehicle_temperature_kelvin / VEHICLE_TEMPERATURE_KELVIN_NORMALIZATION_FACTOR
 
     @property
     def trip_engine_running_time_s(self) -> int:
@@ -132,7 +132,7 @@ class VehicleTrip:
 
     @property
     def normalized_trip_engine_running_time(self) -> float:
-        return self.trip_engine_running_time_s / trip_engine_running_time_s_normalization_factor
+        return self.trip_engine_running_time_s / TRIP_ENGINE_RUNNING_TIME_S_NORMALIZATION_FACTOR
 
     @property
     def fuel_efficiency_m_per_l(self) -> int:
@@ -156,4 +156,4 @@ class VehicleTrip:
 
     @property
     def normalized_fuel_efficiency(self) -> float:
-        return self.fuel_efficiency_m_per_l / fuel_efficiency_m_per_l_normalization_factor
+        return self.fuel_efficiency_m_per_l / FUEL_EFFICIENCY_M_PEL_L_NORMALIZATION_FACTOR
