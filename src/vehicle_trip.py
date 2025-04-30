@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 
 DATE_AND_TIME_S_NORMALIZATION_FACTOR: int = 31557600 # seconds in a year
 ODOMETER_M_NORMALIZATION_FACTOR: int = 1000000000 # 1 Gm (1'000'000 Km), a bit more than the lifetime of the car
@@ -6,6 +6,11 @@ TRIP_DISTANCE_M_NORMALIZATION_FACTOR: int = 1000000 # 1000 Km, a bit more than a
 VEHICLE_TEMPERATURE_KELVIN_NORMALIZATION_FACTOR: int = 273 # 0C in Kelvin
 TRIP_ENGINE_RUNNING_TIME_S_NORMALIZATION_FACTOR: int = 100000 # 100K seconds, a bit more than a single gas tank could do
 FUEL_EFFICIENCY_M_PEL_L_NORMALIZATION_FACTOR: int = 100000 # 1 L/100Km (100 Km/L), approximate fuel efficiency of VW XL1
+ENGINE_OPERATING_TEMPERATURE_CELSIUS: int = 90
+ENGINE_OPERATING_TEMPERATURE_KELVIN: int = 273 + ENGINE_OPERATING_TEMPERATURE_CELSIUS
+TEMPERATURE_DIFFERENCE_BETWEEN_VEHICLE_AND_ENGINE_OPERATING_NORMALIZATION_FACTOR: int = ENGINE_OPERATING_TEMPERATURE_CELSIUS + 50 # -50C, surely it'll never be colder than that
+TRIP_AVERAGE_SPEED_M_PER_S_NORMALIZATION_FACTOR: int = 40 # equivalent to 144 Km/h
+TIME_OF_DAY_S_SINCE_MIDNIGHT_NORMALIZATION_FACTOR: int = 86400 # seconds in a day
 
 t0: datetime = datetime(2024, 7, 26)
 
@@ -157,3 +162,31 @@ class VehicleTrip:
     @property
     def normalized_fuel_efficiency(self) -> float:
         return self.fuel_efficiency_m_per_l / FUEL_EFFICIENCY_M_PEL_L_NORMALIZATION_FACTOR
+
+    @property
+    def temperature_difference_between_vehicle_and_engine_operating_kelvin(self) -> float:
+        return ENGINE_OPERATING_TEMPERATURE_KELVIN - self.vehicle_temperature_kelvin
+
+    @property
+    def normalized_temperature_difference_between_vehicle_and_engine_operating(self) -> float:
+        return self.temperature_difference_between_vehicle_and_engine_operating_kelvin / TEMPERATURE_DIFFERENCE_BETWEEN_VEHICLE_AND_ENGINE_OPERATING_NORMALIZATION_FACTOR
+
+    @property
+    def trip_average_speed_m_per_s(self) -> float:
+        return self.trip_distance_m / self.trip_engine_running_time_s
+
+    @property
+    def trip_average_speed_s_per_km(self) -> int:
+        return int(self.trip_engine_running_time_s / self.trip_distance_km)
+
+    @property
+    def normalized_trip_average_speed(self) -> float:
+        return self.trip_average_speed_m_per_s / TRIP_AVERAGE_SPEED_M_PER_S_NORMALIZATION_FACTOR
+
+    @property
+    def time_of_day_s_from_midnight(self) -> int:
+        return int((self.date_and_time - datetime.combine(self.date_and_time.date(), time.min)).total_seconds())
+
+    @property
+    def normalized_time_of_day(self) -> float:
+        return self.time_of_day_s_from_midnight / TIME_OF_DAY_S_SINCE_MIDNIGHT_NORMALIZATION_FACTOR
