@@ -78,7 +78,7 @@ def on_generation(ga_instance: pygad.GA):
     print("Average difference in L/100Km of best solution {:.2f}".format(average_fitness))
     plot_solution(ga_instance)
     check_figure_directory()
-    figure_save_path: str = os.path.join(config.SOLUTION_FIGURE_SAVE_DIRECTORY, "{}{:8d}.png".format(config.SOLUTION_FIGURE_SAVE_NAME_PREFIX, ga_instance.generations_completed-1))
+    figure_save_path: str = os.path.join(config.SOLUTION_FIGURE_SAVE_DIRECTORY, "{}{:08d}.png".format(config.SOLUTION_FIGURE_SAVE_NAME_PREFIX, ga_instance.generations_completed-1))
     assert not os.path.exists(figure_save_path)
     plt.savefig(figure_save_path, dpi=config.SOLUTION_FIGURE_RESOLUTION_DPI)
     plt.close("all")
