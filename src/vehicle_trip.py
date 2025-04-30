@@ -190,3 +190,11 @@ class VehicleTrip:
     @property
     def normalized_time_of_day(self) -> float:
         return self.time_of_day_s_from_midnight / TIME_OF_DAY_S_SINCE_MIDNIGHT_NORMALIZATION_FACTOR
+
+    @property
+    def time_of_year_s_from_new_year(self) -> int:
+        return int((self.date_and_time - datetime(self.date_and_time.year, 1, 1)).total_seconds())
+
+    @property
+    def normalized_time_of_year(self) -> float:
+        return self.time_of_year_s_from_new_year / TIME_OF_YEAR_S_SINCE_NEW_YEAR_NORMALIZATION_FACTOR
