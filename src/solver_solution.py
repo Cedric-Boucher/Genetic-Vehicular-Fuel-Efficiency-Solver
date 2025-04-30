@@ -2,6 +2,7 @@ from solver_input_solution import SolverInputSolution, SolverFloats
 from vehicle_trip import VehicleTrip
 from datetime import datetime
 from math import log2
+import config
 
 AllSolverFloats = tuple[SolverFloats, ...]
 
@@ -11,6 +12,7 @@ class SolverSolution:
     which is to say, all input variables. This consists of a SolverInputSolution for each input.
     """
     def __init__(self, all_solution_parameters: AllSolverFloats):
+        assert len(all_solution_parameters) == config.NUMBER_OF_VARIABLES
         self.__solver_input_solutions: tuple[SolverInputSolution, ...] = tuple([
             SolverInputSolution(solution_parameters) for solution_parameters in all_solution_parameters
         ])
@@ -33,7 +35,11 @@ class SolverSolution:
             self.__solver_input_solutions[1].f(vehicle_trip.normalized_odometer) +
             self.__solver_input_solutions[2].f(vehicle_trip.normalized_trip_distance) +
             self.__solver_input_solutions[3].f(vehicle_trip.normalized_vehicle_temperature) +
-            self.__solver_input_solutions[4].f(vehicle_trip.normalized_trip_engine_running_time)
+            self.__solver_input_solutions[4].f(vehicle_trip.normalized_trip_engine_running_time) +
+            self.__solver_input_solutions[5].f(vehicle_trip.normalized_temperature_difference_between_vehicle_and_engine_operating) +
+            self.__solver_input_solutions[6].f(vehicle_trip.normalized_trip_average_speed) +
+            self.__solver_input_solutions[7].f(vehicle_trip.normalized_time_of_day) +
+            self.__solver_input_solutions[8].f(vehicle_trip.normalized_time_of_year)
         )
 
         assert isinstance(y, float)
@@ -69,13 +75,25 @@ class SolverSolution:
             "Vehicle Temperature:\n"
             "{}\n"
             "Trip Engine Running Time:\n"
+            "{}\n"
+            "Temperature Difference Between Vehicle and Engine Operating:\n"
+            "{}\n"
+            "Trip Average Speed:\n"
+            "{}\n"
+            "Time of Day:\n"
+            "{}\n"
+            "Time of Year:\n"
             "{}"
         ).format(
             str(self.__solver_input_solutions[0]),
             str(self.__solver_input_solutions[1]),
             str(self.__solver_input_solutions[2]),
             str(self.__solver_input_solutions[3]),
-            str(self.__solver_input_solutions[4])
+            str(self.__solver_input_solutions[4]),
+            str(self.__solver_input_solutions[5]),
+            str(self.__solver_input_solutions[6]),
+            str(self.__solver_input_solutions[7]),
+            str(self.__solver_input_solutions[8])
         )
 
         return display
@@ -83,6 +101,10 @@ class SolverSolution:
 if __name__ == "__main__":
     from random import random
     test = SolverSolution((
+        tuple(random() for _ in range(40)),
+        tuple(random() for _ in range(40)),
+        tuple(random() for _ in range(40)),
+        tuple(random() for _ in range(40)),
         tuple(random() for _ in range(40)),
         tuple(random() for _ in range(40)),
         tuple(random() for _ in range(40)),

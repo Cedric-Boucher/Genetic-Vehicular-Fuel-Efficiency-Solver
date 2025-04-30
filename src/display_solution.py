@@ -20,7 +20,11 @@ def plot_solution(ga_instance: pygad.GA):
         tuple(best_chromosome_list[40:40*2]),
         tuple(best_chromosome_list[40*2:40*3]),
         tuple(best_chromosome_list[40*3:40*4]),
-        tuple(best_chromosome_list[40*4:40*5])
+        tuple(best_chromosome_list[40*4:40*5]),
+        tuple(best_chromosome_list[40*5:40*6]),
+        tuple(best_chromosome_list[40*6:40*7]),
+        tuple(best_chromosome_list[40*7:40*8]),
+        tuple(best_chromosome_list[40*8:40*9])
     )) # type: ignore
 
     plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
@@ -37,9 +41,32 @@ def plot_solution(ga_instance: pygad.GA):
     y = [solver_solution.solver_input_solutions[3].f(float(xi))/1000 for xi in x]
     plt.plot(x, y)
     x = numpy.arange(0, 1, 1/1000)
-    y = [solver_solution.solver_input_solutions[4].f(float(xi*10))/1000 for xi in x]
+    y = [solver_solution.solver_input_solutions[4].f(float(xi))/1000 for xi in x]
     plt.plot(x, y)
-    plt.legend(("Date and Time (years)", "Odometer (Gm)", "Trip Distance (100Km)", "Vehicle Temperature (K/273)", "Trip Engine Running Time (10Ks [2.78 hours])"))
+    x = numpy.arange(0, 1, 1/1000)
+    y = [solver_solution.solver_input_solutions[5].f(float(xi))/1000 for xi in x]
+    plt.plot(x, y)
+    x = numpy.arange(0, 1, 1/1000)
+    y = [solver_solution.solver_input_solutions[6].f(float(xi))/1000 for xi in x]
+    plt.plot(x, y)
+    x = numpy.arange(0, 1, 1/1000)
+    y = [solver_solution.solver_input_solutions[7].f(float(xi))/1000 for xi in x]
+    plt.plot(x, y)
+    x = numpy.arange(0, 1, 1/1000)
+    y = [solver_solution.solver_input_solutions[7].f(float(xi))/1000 for xi in x]
+    plt.plot(x, y)
+    plt.title("Contribution to Fuel Efficiency from Each Independent Variable")
+    plt.legend((
+        "Date and Time (years)",
+        "Odometer (Gm)",
+        "Trip Distance (100Km)",
+        "Vehicle Temperature (K/273)",
+        "Trip Engine Running Time (10Ks [2.78 hours])",
+        "Temperature Difference Between Vehicle and Engine Operating (140K)",
+        "Average Speed (40m/s)",
+        "Time of Day (days)",
+        "Time of Year (years)"
+    ))
     plt.ylabel("Contribution to Fuel Efficiency (Km/L)")
     plt.ylim((-50, 50))
     plt.xticks(numpy.arange(0, 1.5, 0.2), minor = False)
@@ -64,7 +91,11 @@ if __name__ == "__main__":
             tuple(best_chromosome_list[40:40*2]),
             tuple(best_chromosome_list[40*2:40*3]),
             tuple(best_chromosome_list[40*3:40*4]),
-            tuple(best_chromosome_list[40*4:40*5])
+            tuple(best_chromosome_list[40*4:40*5]),
+            tuple(best_chromosome_list[40*5:40*6]),
+            tuple(best_chromosome_list[40*6:40*7]),
+            tuple(best_chromosome_list[40*7:40*8]),
+            tuple(best_chromosome_list[40*8:40*9])
         )) # type: ignore
         print(solver_solution)
         plot_solution(ga_instance)

@@ -41,7 +41,11 @@ def fitness(ga_instance: pygad.GA, chromosome: Chromosome, solution_idx: int) ->
         tuple(chromosome[40:40*2]),
         tuple(chromosome[40*2:40*3]),
         tuple(chromosome[40*3:40*4]),
-        tuple(chromosome[40*4:40*5])
+        tuple(chromosome[40*4:40*5]),
+        tuple(chromosome[40*5:40*6]),
+        tuple(chromosome[40*6:40*7]),
+        tuple(chromosome[40*7:40*8]),
+        tuple(chromosome[40*8:40*9])
     ))
 
     fitness_scores: list[float] = list()
@@ -68,7 +72,11 @@ def on_generation(ga_instance: pygad.GA):
         tuple(best_chromosome_list[40:40*2]),
         tuple(best_chromosome_list[40*2:40*3]),
         tuple(best_chromosome_list[40*3:40*4]),
-        tuple(best_chromosome_list[40*4:40*5])
+        tuple(best_chromosome_list[40*4:40*5]),
+        tuple(best_chromosome_list[40*5:40*6]),
+        tuple(best_chromosome_list[40*6:40*7]),
+        tuple(best_chromosome_list[40*7:40*8]),
+        tuple(best_chromosome_list[40*8:40*9])
     )) # type: ignore
     fitness_scores: list[float] = list()
     for vehicle_trip in vehicle_trips:

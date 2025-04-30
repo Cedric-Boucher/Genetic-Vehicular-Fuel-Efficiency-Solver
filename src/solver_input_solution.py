@@ -1,5 +1,6 @@
 from math import log, sin
 from scipy.stats import norm
+import config
 
 import warnings
 
@@ -46,7 +47,7 @@ class SolverInputSolution:
             solution_parameters: SolverFloats - each of these values MUST be in the range [0, 1] (bounds can be inclusive or exclusive)
         """
         assert isinstance(solution_parameters, tuple)
-        assert len(solution_parameters) == 40
+        assert len(solution_parameters) == config.GENES_PER_VARIABLE
         self.__solution_parameters: SolverFloats = solution_parameters
 
     @property
