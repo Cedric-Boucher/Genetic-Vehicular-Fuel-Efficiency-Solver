@@ -284,7 +284,7 @@ if __name__ == "__main__":
             tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
         )) # type: ignore
         print(solver_solution)
-        #plot_solution(ga_instance)
+        plot_solution(ga_instance)
         vehicle_trips: list[VehicleTrip] = DataImporter(config.DATA_FILE_PATH).vehicle_trips
         plot_histogram_m_per_l(ga_instance, vehicle_trips, 40)
         plot_histogram_error_m_per_l(ga_instance, vehicle_trips, 40)
