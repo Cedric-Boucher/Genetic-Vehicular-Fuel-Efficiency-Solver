@@ -104,7 +104,7 @@ def plot_histogram_m_per_l(ga_instance: pygad.GA, vehicle_trips: list[VehicleTri
 
     plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
     plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
-    plt.title("Histogram of Deviations of Real Trip Fuel Efficiency From GA Solution Estimation")
+    plt.title("Histogram of Deviations of GA Solution Estimation From Real Trip Fuel Efficiency")
     plt.xlabel("Deviation (m/L)")
     plt.ylabel("Frequency")
     plt.grid(True)
@@ -135,7 +135,7 @@ def plot_histogram_l_per_hundred_km(ga_instance: pygad.GA, vehicle_trips: list[V
 
     plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
     plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
-    plt.title("Histogram of Deviations of Real Trip Fuel Efficiency From GA Solution Estimation")
+    plt.title("Histogram of Deviations of GA Solution Estimation From Real Trip Fuel Efficiency")
     plt.xlabel("Deviation (L/100Km)")
     plt.ylabel("Frequency")
     plt.grid(True)
