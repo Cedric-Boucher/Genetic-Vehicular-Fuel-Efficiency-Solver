@@ -51,7 +51,7 @@ class SolverSolution:
         higher number means better fit
         """
         estimated_fuel_efficiency_m_per_l: float = self.f(vehicle_trip)
-        diff: float = abs(vehicle_trip.fuel_efficiency_m_per_l - estimated_fuel_efficiency_m_per_l)
+        diff: float = abs(vehicle_trip.fuel_efficiency_m_per_l - estimated_fuel_efficiency_m_per_l) # FIXME: compare to normalized fuel efficiency instead?
         try:
             fitness: float = log2(1 / diff) # to make higher number a better fit rather than vice versa
         except ValueError:
@@ -101,15 +101,15 @@ class SolverSolution:
 if __name__ == "__main__":
     from random import random
     test = SolverSolution((
-        tuple(random() for _ in range(40)),
-        tuple(random() for _ in range(40)),
-        tuple(random() for _ in range(40)),
-        tuple(random() for _ in range(40)),
-        tuple(random() for _ in range(40)),
-        tuple(random() for _ in range(40)),
-        tuple(random() for _ in range(40)),
-        tuple(random() for _ in range(40)),
-        tuple(random() for _ in range(40))
+        tuple(random() for _ in range(config.GENES_PER_VARIABLE)),
+        tuple(random() for _ in range(config.GENES_PER_VARIABLE)),
+        tuple(random() for _ in range(config.GENES_PER_VARIABLE)),
+        tuple(random() for _ in range(config.GENES_PER_VARIABLE)),
+        tuple(random() for _ in range(config.GENES_PER_VARIABLE)),
+        tuple(random() for _ in range(config.GENES_PER_VARIABLE)),
+        tuple(random() for _ in range(config.GENES_PER_VARIABLE)),
+        tuple(random() for _ in range(config.GENES_PER_VARIABLE)),
+        tuple(random() for _ in range(config.GENES_PER_VARIABLE))
     )) # type: ignore
     vehicle_trip = VehicleTrip()
     vehicle_trip.date_and_time = datetime(2025, 1, 1)

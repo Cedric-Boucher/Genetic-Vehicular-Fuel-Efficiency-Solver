@@ -6,10 +6,7 @@ import warnings
 
 warnings.filterwarnings("error", category=RuntimeWarning)
 
-SolverFloats = tuple[float, float, float, float, float, float, float, float, float, float,
-                     float, float, float, float, float, float, float, float, float, float,
-                     float, float, float, float, float, float, float, float, float, float,
-                     float, float, float, float, float, float, float, float, float, float]
+SolverFloats = tuple[float, ...]
 
 STANDARD_DEVIATION_MULTIPLIER: float = 100.0
 
@@ -59,8 +56,10 @@ class SolverInputSolution:
             x = 0.000000001
         if x <= 0:
             raise Exception("Input value x is expected to be a positive and non-zero scalar value, but was negative or 0")
-        solution_parameters, std = self.__solution_parameters[:39], self.__solution_parameters[39]*STANDARD_DEVIATION_MULTIPLIER
-        p: SolverFloats = SolverFloats([bounded_to_gauss(v, std) for v in solution_parameters])
+        raw_solution_parameters: list[float] = [self.__solution_parameters[i] for i in range(0, len(self.__solution_parameters), 2)]
+        standard_deviations: list[float] = [self.__solution_parameters[i+1]*STANDARD_DEVIATION_MULTIPLIER for i in range(0, len(self.__solution_parameters), 2)]
+        solution_parameters: list[tuple[float, float]] = list(zip(raw_solution_parameters, standard_deviations, strict=True))
+        p: SolverFloats = SolverFloats([bounded_to_gauss(v, std) for (v, std) in solution_parameters])
         y: float = p[0]*x**5 + p[1]*x**4 + p[2]*x**3 +  p[3]*x**2 + p[4]*x + p[5]
         if (x+p[7]) != 0:
             y += p[6]/(x+p[7])
@@ -84,8 +83,10 @@ class SolverInputSolution:
         return y
 
     def __str__(self) -> str:
-        solution_parameters, std = self.__solution_parameters[:39], self.__solution_parameters[39]*STANDARD_DEVIATION_MULTIPLIER
-        p: SolverFloats = SolverFloats([bounded_to_gauss(v, std) for v in solution_parameters])
+        raw_solution_parameters: list[float] = [self.__solution_parameters[i] for i in range(0, len(self.__solution_parameters), 2)]
+        standard_deviations: list[float] = [self.__solution_parameters[i+1]*STANDARD_DEVIATION_MULTIPLIER for i in range(0, len(self.__solution_parameters), 2)]
+        solution_parameters: list[tuple[float, float]] = list(zip(raw_solution_parameters, standard_deviations, strict=True))
+        p: SolverFloats = SolverFloats([bounded_to_gauss(v, std) for (v, std) in solution_parameters])
         equation_string: str = str(
             "{p0:.2f}*x^5 + {p1:.2f}*x^4 + {p2:.2f}*x^3 + {p3:.2f}*x^2 + {p4:.2f}*x + {p5:.2f} +\n"
             "{p6:.2f}/(x + {p7:.2f}) +\n"

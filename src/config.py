@@ -2,13 +2,13 @@ GA_MODEL_FILE: str = "vehicular_fuel_efficiency_equation"
 
 GA_STOP_FLAG_FILE: str = "to_safely_stop_genetic_learner.deleteme"
 
-GA_POPULATION_SIZE: int = 8
+GA_POPULATION_SIZE: int = 1024
 GA_GENERATION_GOAL: int = 1000000
 GA_FITNESS_GOAL: float = 3
-GA_NUMBER_OF_PARENTS: int = 4
+GA_NUMBER_OF_PARENTS: int = 64
 GA_NUMBER_OF_GENES_TO_MUTATE: int = 1
 GA_NUMBER_OF_THREADS: int = 5 # number of threads/processes to use for GA
-GENES_PER_VARIABLE: int = 40
+GENES_PER_VARIABLE: int = 39 * 2
 NUMBER_OF_VARIABLES: int = 9
 GA_CHROMOSOME_LENGTH: int = GENES_PER_VARIABLE * NUMBER_OF_VARIABLES
 

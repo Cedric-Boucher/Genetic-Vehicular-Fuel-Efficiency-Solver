@@ -36,17 +36,13 @@ def fitness(ga_instance: pygad.GA, chromosome: Chromosome, solution_idx: int) ->
     Returns:
         float: fitness score to be maximized
     """
-    solver_solution = SolverSolution((
-        tuple(chromosome[0:40]),
-        tuple(chromosome[40:40*2]),
-        tuple(chromosome[40*2:40*3]),
-        tuple(chromosome[40*3:40*4]),
-        tuple(chromosome[40*4:40*5]),
-        tuple(chromosome[40*5:40*6]),
-        tuple(chromosome[40*6:40*7]),
-        tuple(chromosome[40*7:40*8]),
-        tuple(chromosome[40*8:40*9])
-    ))
+    chromosome_list: list[float] = list(chromosome) # type: ignore
+    solution_parameters: list[tuple[float, ...]] = list()
+    for _ in range(config.NUMBER_OF_VARIABLES):
+        solver_input_solution_genes: tuple[float, ...] = tuple([chromosome_list.pop() for _ in range(config.GENES_PER_VARIABLE)])
+        solution_parameters.append(solver_input_solution_genes)
+    assert len(chromosome_list) == 0
+    solver_solution: SolverSolution = SolverSolution(tuple(solution_parameters))
 
     fitness_scores: list[float] = list()
 
@@ -68,15 +64,15 @@ def on_generation(ga_instance: pygad.GA):
     assert best_chromosome is not None
     best_chromosome_list: list[float] = best_chromosome.tolist()[0]
     solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:40]),
-        tuple(best_chromosome_list[40:40*2]),
-        tuple(best_chromosome_list[40*2:40*3]),
-        tuple(best_chromosome_list[40*3:40*4]),
-        tuple(best_chromosome_list[40*4:40*5]),
-        tuple(best_chromosome_list[40*5:40*6]),
-        tuple(best_chromosome_list[40*6:40*7]),
-        tuple(best_chromosome_list[40*7:40*8]),
-        tuple(best_chromosome_list[40*8:40*9])
+        tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
     )) # type: ignore
     fitness_scores: list[float] = list()
     for vehicle_trip in vehicle_trips:
