@@ -6,6 +6,7 @@ import os
 from solver_solution import SolverSolution
 
 from chromosome import Chromosome
+from vehicle_trip import VehicleTrip
 
 import matplotlib.pyplot as plt
 import numpy
@@ -16,15 +17,15 @@ def plot_solution(ga_instance: pygad.GA):
 
     best_chromosome_list: list[float] = best_chromosome.tolist()[0]
     solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:40]),
-        tuple(best_chromosome_list[40:40*2]),
-        tuple(best_chromosome_list[40*2:40*3]),
-        tuple(best_chromosome_list[40*3:40*4]),
-        tuple(best_chromosome_list[40*4:40*5]),
-        tuple(best_chromosome_list[40*5:40*6]),
-        tuple(best_chromosome_list[40*6:40*7]),
-        tuple(best_chromosome_list[40*7:40*8]),
-        tuple(best_chromosome_list[40*8:40*9])
+        tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
     )) # type: ignore
 
     plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
@@ -78,25 +79,91 @@ def plot_solution(ga_instance: pygad.GA):
     plt.grid(True, "major", "x", linewidth = 2, alpha = 0.5)
     plt.grid(True, "minor", "x", linewidth = 2, alpha = 0.1)
 
+def plot_histogram_m_per_l(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int):
+    best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
+    assert best_chromosome is not None
+
+    best_chromosome_list: list[float] = best_chromosome.tolist()[0]
+    solver_solution = SolverSolution((
+        tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
+    )) # type: ignore
+
+    deviations_from_calculation: list[int] = list()
+    for vehicle_trip in vehicle_trips:
+        estimated_fuel_efficiency_m_per_l: int = int(solver_solution.f(vehicle_trip))
+        deviation_from_calculation: int = estimated_fuel_efficiency_m_per_l - vehicle_trip.fuel_efficiency_m_per_l
+        deviations_from_calculation.append(deviation_from_calculation)
+
+    plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
+    plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
+    plt.title("Histogram of Deviations of Real Trip Fuel Efficiency From GA Solution Estimation")
+    plt.xlabel("Deviation (m/L)")
+    plt.ylabel("Frequency")
+    plt.grid(True)
+
+def plot_histogram_l_per_hundred_km(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int):
+    best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
+    assert best_chromosome is not None
+
+    best_chromosome_list: list[float] = best_chromosome.tolist()[0]
+    solver_solution = SolverSolution((
+        tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
+        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
+    )) # type: ignore
+
+    deviations_from_calculation: list[float] = list()
+    for vehicle_trip in vehicle_trips:
+        estimated_fuel_efficiency_m_per_l: float = solver_solution.f(vehicle_trip)
+        estimated_fuel_efficiency_l_per_hundred_km: float = 100000/estimated_fuel_efficiency_m_per_l
+        deviation_from_calculation: float = estimated_fuel_efficiency_l_per_hundred_km - vehicle_trip.fuel_efficiency_l_per_hundred_km
+        deviations_from_calculation.append(deviation_from_calculation)
+
+    plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
+    plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
+    plt.title("Histogram of Deviations of Real Trip Fuel Efficiency From GA Solution Estimation")
+    plt.xlabel("Deviation (L/100Km)")
+    plt.ylabel("Frequency")
+    plt.grid(True)
+
 
 if __name__ == "__main__":
     if (os.path.exists(config.GA_MODEL_FILE+".pkl") and os.path.isfile(config.GA_MODEL_FILE+".pkl")):
+        from data_importer import DataImporter
+
         ga_instance: pygad.GA = pygad.load(config.GA_MODEL_FILE)
         best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
         assert best_chromosome is not None
 
         best_chromosome_list: list[float] = best_chromosome.tolist()[0]
         solver_solution = SolverSolution((
-            tuple(best_chromosome_list[0:40]),
-            tuple(best_chromosome_list[40:40*2]),
-            tuple(best_chromosome_list[40*2:40*3]),
-            tuple(best_chromosome_list[40*3:40*4]),
-            tuple(best_chromosome_list[40*4:40*5]),
-            tuple(best_chromosome_list[40*5:40*6]),
-            tuple(best_chromosome_list[40*6:40*7]),
-            tuple(best_chromosome_list[40*7:40*8]),
-            tuple(best_chromosome_list[40*8:40*9])
+            tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
+            tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
+            tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
+            tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
+            tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
+            tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
+            tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
+            tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
+            tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
         )) # type: ignore
         print(solver_solution)
         plot_solution(ga_instance)
+        vehicle_trips: list[VehicleTrip] = DataImporter(config.DATA_FILE_PATH).vehicle_trips
+        plot_histogram_m_per_l(ga_instance, vehicle_trips, 40)
+        plot_histogram_l_per_hundred_km(ga_instance, vehicle_trips, 40)
         plt.show()
