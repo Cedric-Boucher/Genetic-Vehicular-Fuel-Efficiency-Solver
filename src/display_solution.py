@@ -10,6 +10,7 @@ from vehicle_trip import VehicleTrip
 
 import matplotlib.pyplot as plt
 import numpy
+from collections.abc import Callable
 
 def plot_solution(ga_instance: pygad.GA):
     best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
@@ -79,7 +80,7 @@ def plot_solution(ga_instance: pygad.GA):
     plt.grid(True, "major", "x", linewidth = 2, alpha = 0.5)
     plt.grid(True, "minor", "x", linewidth = 2, alpha = 0.1)
 
-def plot_histogram_m_per_l(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int):
+def plot_histogram(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int, calculation: Callable[[SolverSolution, VehicleTrip], float]):
     best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
     assert best_chromosome is not None
 
@@ -96,171 +97,89 @@ def plot_histogram_m_per_l(ga_instance: pygad.GA, vehicle_trips: list[VehicleTri
         tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
     )) # type: ignore
 
-    deviations_from_calculation: list[int] = list()
+    deviations_from_calculation: list[float] = list()
     for vehicle_trip in vehicle_trips:
-        estimated_fuel_efficiency_m_per_l: int = int(solver_solution.f(vehicle_trip))
-        deviation_from_calculation: int = estimated_fuel_efficiency_m_per_l - vehicle_trip.fuel_efficiency_m_per_l
-        deviations_from_calculation.append(deviation_from_calculation)
+        deviations_from_calculation.append(calculation(solver_solution, vehicle_trip))
 
     plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
     plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
+    plt.ylabel("Frequency")
+    plt.grid(True)
+
+def plot_histogram_m_per_l(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int):
+
+    def calculation(solver_solution: SolverSolution, vehicle_trip: VehicleTrip) -> float:
+        estimated_fuel_efficiency_m_per_l: float = solver_solution.f(vehicle_trip)
+        deviation_from_calculation: float = estimated_fuel_efficiency_m_per_l - vehicle_trip.fuel_efficiency_m_per_l
+        return deviation_from_calculation
+
+    plot_histogram(ga_instance, vehicle_trips, number_of_bins, calculation)
+
     plt.title("Histogram of Deviations of GA Solution Estimation From Real Trip Fuel Efficiency")
     plt.xlabel("Deviation (m/L)")
-    plt.ylabel("Frequency")
-    plt.grid(True)
 
 def plot_histogram_error_m_per_l(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int):
-    best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
-    assert best_chromosome is not None
 
-    best_chromosome_list: list[float] = best_chromosome.tolist()[0]
-    solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
-    )) # type: ignore
+    def calculation(solver_solution: SolverSolution, vehicle_trip: VehicleTrip) -> float:
+        estimated_fuel_efficiency_m_per_l: float = solver_solution.f(vehicle_trip)
+        deviation_from_calculation: float = abs(estimated_fuel_efficiency_m_per_l - vehicle_trip.fuel_efficiency_m_per_l)
+        return deviation_from_calculation
 
-    deviations_from_calculation: list[int] = list()
-    for vehicle_trip in vehicle_trips:
-        estimated_fuel_efficiency_m_per_l: int = int(solver_solution.f(vehicle_trip))
-        deviation_from_calculation: int = abs(estimated_fuel_efficiency_m_per_l - vehicle_trip.fuel_efficiency_m_per_l)
-        deviations_from_calculation.append(deviation_from_calculation)
+    plot_histogram(ga_instance, vehicle_trips, number_of_bins, calculation)
 
-    plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
-    plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
     plt.title("Histogram of Absolute Deviations of GA Solution Estimation From Real Trip Fuel Efficiency")
     plt.xlabel("Absolute Deviation (m/L)")
-    plt.ylabel("Frequency")
-    plt.grid(True)
 
 def plot_histogram_percent_error_m_per_l(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int):
-    best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
-    assert best_chromosome is not None
 
-    best_chromosome_list: list[float] = best_chromosome.tolist()[0]
-    solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
-    )) # type: ignore
-
-    deviations_from_calculation: list[float] = list()
-    for vehicle_trip in vehicle_trips:
+    def calculation(solver_solution: SolverSolution, vehicle_trip: VehicleTrip) -> float:
         estimated_fuel_efficiency_m_per_l: float = solver_solution.f(vehicle_trip)
         deviation_from_calculation: float = abs(estimated_fuel_efficiency_m_per_l / vehicle_trip.fuel_efficiency_m_per_l) * 100
-        deviations_from_calculation.append(deviation_from_calculation)
+        return deviation_from_calculation
 
-    plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
-    plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
+    plot_histogram(ga_instance, vehicle_trips, number_of_bins, calculation)
+
     plt.title("Histogram of Absolute Deviations of GA Solution Estimation From Real Trip Fuel Efficiency")
     plt.xlabel("Absolute Deviation (% m/L)")
-    plt.ylabel("Frequency")
-    plt.grid(True)
 
 def plot_histogram_l_per_hundred_km(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int):
-    best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
-    assert best_chromosome is not None
 
-    best_chromosome_list: list[float] = best_chromosome.tolist()[0]
-    solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
-    )) # type: ignore
-
-    deviations_from_calculation: list[float] = list()
-    for vehicle_trip in vehicle_trips:
+    def calculation(solver_solution: SolverSolution, vehicle_trip: VehicleTrip) -> float:
         estimated_fuel_efficiency_m_per_l: float = solver_solution.f(vehicle_trip)
         estimated_fuel_efficiency_l_per_hundred_km: float = 100000/estimated_fuel_efficiency_m_per_l
         deviation_from_calculation: float = estimated_fuel_efficiency_l_per_hundred_km - vehicle_trip.fuel_efficiency_l_per_hundred_km
-        deviations_from_calculation.append(deviation_from_calculation)
+        return deviation_from_calculation
 
-    plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
-    plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
+    plot_histogram(ga_instance, vehicle_trips, number_of_bins, calculation)
+
     plt.title("Histogram of Deviations of GA Solution Estimation From Real Trip Fuel Efficiency")
     plt.xlabel("Deviation (L/100Km)")
-    plt.ylabel("Frequency")
-    plt.grid(True)
 
 def plot_histogram_error_l_per_hundred_km(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int):
-    best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
-    assert best_chromosome is not None
 
-    best_chromosome_list: list[float] = best_chromosome.tolist()[0]
-    solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
-    )) # type: ignore
-
-    deviations_from_calculation: list[float] = list()
-    for vehicle_trip in vehicle_trips:
+    def calculation(solver_solution: SolverSolution, vehicle_trip: VehicleTrip) -> float:
         estimated_fuel_efficiency_m_per_l: float = solver_solution.f(vehicle_trip)
         estimated_fuel_efficiency_l_per_hundred_km: float = 100000/estimated_fuel_efficiency_m_per_l
         deviation_from_calculation: float = abs(estimated_fuel_efficiency_l_per_hundred_km - vehicle_trip.fuel_efficiency_l_per_hundred_km)
-        deviations_from_calculation.append(deviation_from_calculation)
+        return deviation_from_calculation
 
-    plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
-    plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
+    plot_histogram(ga_instance, vehicle_trips, number_of_bins, calculation)
+
     plt.title("Histogram of Absolute Deviations of GA Solution Estimation From Real Trip Fuel Efficiency")
     plt.xlabel("Absolute Deviation (L/100Km)")
-    plt.ylabel("Frequency")
-    plt.grid(True)
 
 def plot_histogram_percent_error_l_per_hundred_km(ga_instance: pygad.GA, vehicle_trips: list[VehicleTrip], number_of_bins: int):
-    best_chromosome: Chromosome = ga_instance.last_generation_elitism # type: ignore
-    assert best_chromosome is not None
 
-    best_chromosome_list: list[float] = best_chromosome.tolist()[0]
-    solver_solution = SolverSolution((
-        tuple(best_chromosome_list[0:config.GENES_PER_VARIABLE]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE:config.GENES_PER_VARIABLE*2]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*2:config.GENES_PER_VARIABLE*3]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*3:config.GENES_PER_VARIABLE*4]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*4:config.GENES_PER_VARIABLE*5]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*5:config.GENES_PER_VARIABLE*6]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*6:config.GENES_PER_VARIABLE*7]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*7:config.GENES_PER_VARIABLE*8]),
-        tuple(best_chromosome_list[config.GENES_PER_VARIABLE*8:config.GENES_PER_VARIABLE*9])
-    )) # type: ignore
-
-    deviations_from_calculation: list[float] = list()
-    for vehicle_trip in vehicle_trips:
+    def calculation(solver_solution: SolverSolution, vehicle_trip: VehicleTrip) -> float:
         estimated_fuel_efficiency_m_per_l: float = solver_solution.f(vehicle_trip)
         estimated_fuel_efficiency_l_per_hundred_km: float = 100000/estimated_fuel_efficiency_m_per_l
         deviation_from_calculation: float = abs(estimated_fuel_efficiency_l_per_hundred_km / vehicle_trip.fuel_efficiency_l_per_hundred_km) * 100
-        deviations_from_calculation.append(deviation_from_calculation)
+        return deviation_from_calculation
 
-    plt.figure(figsize=config.SOLUTION_FIGURE_SIZE_INCHES)
-    plt.hist(deviations_from_calculation, bins=number_of_bins, edgecolor="black")
+    plot_histogram(ga_instance, vehicle_trips, number_of_bins, calculation)
+
     plt.title("Histogram of Absolute Deviations of GA Solution Estimation From Real Trip Fuel Efficiency")
     plt.xlabel("Absolute Deviation (% L/100Km)")
-    plt.ylabel("Frequency")
-    plt.grid(True)
 
 
 if __name__ == "__main__":
