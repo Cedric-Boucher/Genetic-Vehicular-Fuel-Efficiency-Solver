@@ -14,6 +14,8 @@ from data_importer import DataImporter
 from display_solution import plot_solution
 import matplotlib.pyplot as plt
 
+from math import log2
+
 vehicle_trips: list[VehicleTrip] = DataImporter(config.DATA_FILE_PATH).vehicle_trips
 start_time_ns: int = time_ns()
 NANOSECONDS_IN_ONE_HOUR = 3600000000000
@@ -45,12 +47,24 @@ def fitness(ga_instance: pygad.GA, chromosome: Chromosome, solution_idx: int) ->
     solver_solution: SolverSolution = SolverSolution(tuple(solution_parameters))
 
     fitness_scores: list[float] = list()
+    differences_m_per_l: list[float] = list()
 
     for vehicle_trip in vehicle_trips:
+        estimated_fuel_efficiency_m_per_l: float = solver_solution.f(vehicle_trip)
         fitness: float = solver_solution.fitness(vehicle_trip)
         fitness_scores.append(fitness)
+        difference_m_per_l: float = abs(vehicle_trip.fuel_efficiency_m_per_l - estimated_fuel_efficiency_m_per_l)
+        differences_m_per_l.append(difference_m_per_l)
 
-    average_fitness: float = sum(fitness_scores)/len(fitness_scores)
+    #average_fitness: float = sum(fitness_scores)/len(fitness_scores)
+    average_difference_m_per_l: float = sum(differences_m_per_l)/len(differences_m_per_l)
+    average_fitness: float = log2(1 / average_difference_m_per_l)
+
+    fitness_scores.sort()
+    #median_fitness: float = fitness_scores[int(len(fitness_scores)/2)]
+    differences_m_per_l.sort()
+    median_difference_m_per_l: float = differences_m_per_l[int(len(differences_m_per_l)/2)]
+    median_fitness: float = log2(1 / median_difference_m_per_l)
 
     return average_fitness
 
