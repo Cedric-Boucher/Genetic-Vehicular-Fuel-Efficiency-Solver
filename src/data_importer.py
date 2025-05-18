@@ -3,6 +3,7 @@ from typing import Self
 import csv
 from vehicle_trip import VehicleTrip
 from datetime import datetime
+import pandas as pd
 
 class HeaderMap:
     def __init__(self,
