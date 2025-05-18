@@ -3,6 +3,7 @@ from typing import Self
 import csv
 from vehicle_trip import VehicleTrip
 from datetime import datetime
+import pandas as pd
 
 class HeaderMap:
     def __init__(self,
@@ -87,6 +88,29 @@ class DataImporter:
         data = self.__import_data().__data
         assert data is not None
         return data
+
+    @property
+    def vehicle_trip_dataframe(self) -> pd.DataFrame:
+        data = self.__import_data().__data
+        assert data is not None
+        df: pd.DataFrame = pd.DataFrame([
+            {
+                "seconds_since_purchase": int(trip.seconds_since_t0),
+                "odometer_m": trip.odometer_m,
+                "trip_distance_m": trip.trip_distance_m,
+                "vehicle_temperature_k": int(trip.vehicle_temperature_kelvin),
+                "temperature_difference_vehicle_operating_k": int(trip.temperature_difference_between_vehicle_and_engine_operating_kelvin),
+                "trip_engine_running_time_s": trip.trip_engine_running_time_s,
+                "trip_average_speed_s_per_km": trip.trip_average_speed_s_per_km,
+                "time_of_day_seconds_from_midnight": trip.time_of_day_s_from_midnight,
+                "time_of_year_seconds_from_new_year": trip.time_of_year_s_from_new_year,
+                "fuel_efficiency_m_per_l": trip.fuel_efficiency_m_per_l
+            }
+            for trip in data
+        ])
+
+        return df
+
 
 if __name__ == "__main__":
     vehicle_trips: list[VehicleTrip] = DataImporter("K:/Downloads/Toyota Corolla Automatic 2009.csv").vehicle_trips

@@ -178,7 +178,10 @@ class VehicleTrip:
 
     @property
     def trip_average_speed_s_per_km(self) -> int:
-        return int(self.trip_engine_running_time_s / self.trip_distance_km)
+        try:
+            return int(self.trip_engine_running_time_s / self.trip_distance_km)
+        except ZeroDivisionError:
+            return 0
 
     @property
     def normalized_trip_average_speed(self) -> float:
